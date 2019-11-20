@@ -219,7 +219,7 @@ ${PROJECT_TEMP_ROOT}
 
 - returns: Compiler arguments, filtered for suitable use by SourceKit.
 */
-internal func checkNewBuildSystem(in projectTempRoot: String, moduleName: String? = nil) -> [String]? {
+public func checkNewBuildSystem(in projectTempRoot: String, moduleName: String? = nil) -> [String]? {
     let xcbuildDataURL = URL(fileURLWithPath: projectTempRoot).appendingPathComponent("XCBuildData")
 
     do {
