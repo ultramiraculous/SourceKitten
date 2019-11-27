@@ -233,6 +233,8 @@ public func checkNewBuildSystem(in projectTempRoot: String, moduleName: String? 
             guard let contents = try? String(contentsOf: manifestURL),
                 let yaml = try? Yams.compose(yaml: contents),
                 let commands = (yaml as Node?)?["commands"]?.mapping?.values else {
+                    
+                    fputs("No contents: \(manifestURL.path)\n", stderr)
                     return nil
             }
             for command in commands where command["description"]?.string?.hasSuffix("com.apple.xcode.tools.swift.compiler") ?? false {
@@ -244,6 +246,7 @@ public func checkNewBuildSystem(in projectTempRoot: String, moduleName: String? 
                     return Array(fullArgs.suffix(from: fullArgs.index(after: swiftCIndex)))
                 }
             }
+            fputs("No build commands found: \(manifestURL.path)\n", stderr)
             return nil
         }.first.map { filter(arguments: $0) }
 
@@ -251,7 +254,8 @@ public func checkNewBuildSystem(in projectTempRoot: String, moduleName: String? 
             fputs("Assuming New Build System is used.\n", stderr)
         }
         return result
-    } catch {
+    } catch let error {
+        fputs("Error parsing: \(error)", stderr)
         return nil
     }
 }
